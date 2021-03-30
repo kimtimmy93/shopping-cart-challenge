@@ -1,7 +1,12 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link
+      :class="{ active: $route.name === 'Cart' }"
+      to="/cart"
+    >
+      Cart
+    </router-link>
   </div>
   <router-view/>
 </template>
@@ -28,3 +33,10 @@
   }
 }
 </style>
+
+<script>
+export default {
+
+}
+</script>
+
