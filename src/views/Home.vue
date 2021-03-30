@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="Home">
     <SidebarCartDrawer
       :active="active.sidebar_cart_open"
       :product="product"
@@ -8,7 +8,6 @@
     <div 
       v-for="product in products"
       :key="product.title"
-      class="Product"
     >
       <div class="Buttons__Container">
         <button 
@@ -22,7 +21,7 @@
         <button 
           type="button" 
           class="Buttons__ClearCart Button"
-          @click="handleClearCart()"
+          @click="handleClearCart(product)"
         >
           Clear Cart
         </button>
@@ -42,12 +41,11 @@
     data: () => ({
       products: [
         {
-          title: 'Costa Rica 16oz',
+          title: 'Costa Rica Beans 16oz',
           price: 15.99
         }
       ],
       product: null,
-      cart: [],
       active: {
         sidebar_cart_open: false
       }
@@ -55,23 +53,34 @@
     computed: {
       getProductPrice() {
         return this.product.price
-      }
+      },
     },
     methods: {
       handleAddToCart(product) {
         this.product = product;
-        this.cart.push(product);
         this.active.sidebar_cart_open = true;
+        this.$store.commit('addItemToCart', this.product);
+      },
+      handleClearCart(product) {
+        this.product = product;
+        this.active.sidebar_cart_open = true;
+        this.$store.commit('removeItemsFromCart', this.product);
       },
       hideSidebarCart() {
         this.active.sidebar_cart_open = false;
-      }
+      },
     }
   }
 </script>
 
 <style lang="scss">
   .Buttons {
+
+    // .Buttons__Container
+    &__Container {
+      text-align: center;
+      margin: 100px auto;
+    }
 
     // .Buttons__AddToCart
     // .Buttons__ClearCart

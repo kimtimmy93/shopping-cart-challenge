@@ -16,29 +16,43 @@
     </button>
     <div class="SidebarCart__Inner">
       <div 
-        v-if="product"
+        v-if="product && getProductQuantity !== 0"
         class="SidebarCart__ProductWrapper"
       >
-        <h4 class="SidebarCart__ProductTitle">
-          {{ product.title }}
-        </h4>
-        <span class="SidebarCart__ProductPrice">
-          ${{ product.price }}
-        </span>
-        <span class="SidebarCart__ProductQuantity">
-          {{ getProductQuantity }}
-        </span>
+        <div class="SidebarCart__ProductDetails">
+          <h4 class="SidebarCart__ProductTitle">
+            {{ product.title }}
+          </h4>
+          <span class="SidebarCart__ProductPrice">
+            ${{ product.price }}
+          </span>
+        </div>
+        <div class="SidebarCart__ProductQuantity">
+          <span class="SidebarCart__ProductQuantityText">
+            Qty:
+          </span>
+          <span class="SidebarCart__ProductItemQuantity">
+            {{ getProductQuantity }}
+          </span>
+        </div>
       </div>
       <div
         v-else
+        class="SidebarCart__EmptyState"
       > 
-        <span>Your Cart Is Empty</span>
+        <span class="SidebarCart__EmptyStateText">
+          Your Cart Is Empty
+        </span>
       </div>
     </div>
-    <div class="SidebarCart__Footer">
+    <div
+      class="SidebarCart__Footer"
+    >
       <span class="SidebarCart__TotalText">Total</span>
-      <span class="SidebarCart__TotalPrice">
-        {{ getCartTotal }}
+      <span 
+        class="SidebarCart__TotalPrice"
+      >
+        ${{ getCartTotal.toFixed(2) }}
       </span>
     </div>
   </div>
@@ -52,14 +66,19 @@
     ],
     computed: {
       getProductQuantity() {
-        return 0;
+        return this.$store.getters.productQuantity(this.product);
       },
       getCartTotal() {
-        return 100;
+        return this.$store.getters.cartTotal;
       }
     },
     methods: {
-
+      addItemToCart() {
+        this.$store.commit('addItemToCart', this.product);
+      },
+      removeItemFromCart() {
+        this.$store.commit('removeFromCart', this.product);
+      }
     }
   }
 </script>
@@ -96,6 +115,15 @@
       }
     }
 
+    // .SidebarCart__EmptyState
+    // .SidebarCart__ProductWrapper
+    &__EmptyState,
+    &__ProductWrapper {
+      text-align: center;
+      margin: 50px 0;
+      padding: 0 20px;
+    }
+
     // .SidebarCart__Modal
     &__Modal {
       display: none;
@@ -118,6 +146,7 @@
     &__Footer {
       position: absolute;
       bottom: 0;
+      margin: 50px 20px;
     }
 
     // .SidebarCart__CloseBtn
